@@ -1,3 +1,5 @@
+import os
+os.system( 'clear' )
 # '''
 # Linked List hash table key/value pair
 # '''
@@ -15,6 +17,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.size = 0
 
 
     def _hash(self, key):
@@ -23,6 +26,14 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+        hashsum = 1001
+
+        for i in range( len( key ) - 1 ):
+            # Bit-shift and sum value for each character
+            hashsum += ( i << 5 ) + hashsum
+            # keeps hashsum in range of self.capacity - 1
+            key = hashsum % self.capacity
+
         return hash(key)
 
 
@@ -51,7 +62,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        print( 'Key:' , key , 'Value:' , value )
+
+        self.size += 1
+        index = self._hash( key )
+        node = self.storage[ index ]
+
+        # if storage is empty
+        if node is None:
+            self.storage[ index ] = LinkedPair( key , value )
+            return
 
 
 
@@ -74,7 +94,7 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        print( 'Retrieve:' , key )
 
 
     def resize(self):
@@ -84,7 +104,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
+
+        for i in range(self.count):
+            new_storage[i] = self.storage[i]
+
+        self.storage = new_storage
 
 
 
