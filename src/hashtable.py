@@ -19,7 +19,6 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
-        self.size = 0
 
 
     def _hash(self, key):
@@ -45,23 +44,17 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
-
         # buckets
         hashsum = 5001
 
-        index = 0
-
-        for i in range( len( key ) ):
-
-            index += random.randint( 0 , len( key ) )
-            
-
-        key == index + hashsum
-
-
-        print( 'KEY' , key )
-
-        return self._hash(key) % self.capacity
+        for i in range( len( self.storage ) ):
+            if self.storage[i] == None:
+                return i
+            else:
+                if i == len( self.storage ) - 1:
+                    print( 'STORAGE IS FULL' )
+                    self.resize()
+                    return i
 
 
     def insert(self, key, value):
@@ -75,10 +68,7 @@ class HashTable:
         print( 'INSERT - Key:' , key , 'Value:' , value )
 
         index = self._hash_mod( key )
-
-        if self.storage[ index ] is not None:
-            print( 'taken:' , key )
-
+        print( 'index from insert' , index )
         node = self.storage[ index ]
 
         # if storage is empty
@@ -86,16 +76,6 @@ class HashTable:
 
             self.storage[ index ] = LinkedPair( key , value )
             return
-
-        else:
-            
-            prev = node
-            while node is not None:
-
-                prev = node
-                node = node.next
-
-            prev.next = LinkedPair(key, value)
 
 
 
@@ -119,7 +99,7 @@ class HashTable:
 
         Fill this in.
         '''
-        os.system( 'clear' )
+        # os.system( 'clear' )
         for i in self.storage:
             if i is not None:
                 print( i.key , i.value )
@@ -141,13 +121,14 @@ class HashTable:
 
         Fill this in.
         '''
-        self.capacity *= 2
-        new_storage = [None] * self.capacity
+        print( 'RESIZING!')
 
-        for i in range(self.count):
-            new_storage[i] = self.storage[i]
+        current_len = len( self.storage )
 
-        self.storage = new_storage
+        HashTable( current_len * 2 )
+
+        for i in range( current_len ):
+            self.storage.append( None )
 
 
 
