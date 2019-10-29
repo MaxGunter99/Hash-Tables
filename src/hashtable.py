@@ -1,4 +1,6 @@
 import os
+import sys
+import random
 os.system( 'clear' )
 # '''
 # Linked List hash table key/value pair
@@ -26,14 +28,6 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        hashsum = 1001
-
-        for i in range( len( key ) - 1 ):
-            # Bit-shift and sum value for each character
-            hashsum += ( i << 5 ) + hashsum
-            # keeps hashsum in range of self.capacity - 1
-            key = hashsum % self.capacity
-
         return hash(key)
 
 
@@ -51,6 +45,22 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
+
+        # buckets
+        hashsum = 5001
+
+        index = 0
+
+        for i in range( len( key ) ):
+
+            index += random.randint( 0 , len( key ) )
+            
+
+        key == index + hashsum
+
+
+        print( 'KEY' , key )
+
         return self._hash(key) % self.capacity
 
 
@@ -62,16 +72,30 @@ class HashTable:
 
         Fill this in.
         '''
-        print( 'Key:' , key , 'Value:' , value )
+        print( 'INSERT - Key:' , key , 'Value:' , value )
 
-        self.size += 1
-        index = self._hash( key )
+        index = self._hash_mod( key )
+
+        if self.storage[ index ] is not None:
+            print( 'taken:' , key )
+
         node = self.storage[ index ]
 
         # if storage is empty
         if node is None:
+
             self.storage[ index ] = LinkedPair( key , value )
             return
+
+        else:
+            
+            prev = node
+            while node is not None:
+
+                prev = node
+                node = node.next
+
+            prev.next = LinkedPair(key, value)
 
 
 
@@ -83,6 +107,7 @@ class HashTable:
 
         Fill this in.
         '''
+
         pass
 
 
@@ -94,7 +119,19 @@ class HashTable:
 
         Fill this in.
         '''
+        os.system( 'clear' )
+        for i in self.storage:
+            if i is not None:
+                print( i.key , i.value )
+
+
         print( 'Retrieve:' , key )
+        for i in self.storage:
+            if i is not None:
+
+                if i.key == key:
+
+                    return i.value
 
 
     def resize(self):
