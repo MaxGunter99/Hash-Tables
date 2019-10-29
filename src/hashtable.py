@@ -44,17 +44,9 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
-        # buckets
-        hashsum = 5001
+        return self._hash(key) % self.capacity
 
-        for i in range( len( self.storage ) ):
-            if self.storage[i] == None:
-                return i
-            else:
-                if i == len( self.storage ) - 1:
-                    print( 'STORAGE IS FULL' )
-                    self.resize()
-                    return i + 1
+                    
 
 
     def insert(self, key, value):
@@ -67,15 +59,36 @@ class HashTable:
         '''
         print( 'INSERT - Key:' , key , 'Value:' , value )
 
-        index = self._hash_mod( key )
-        print( 'index from insert' , index )
-        node = self.storage[ index ]
+        bucket = self.storage[ self._hash_mod( key ) ]
 
-        # if storage is empty
-        if node is None:
+        if bucket is None:
+            self.storage[ self._hash_mod( key ) ] = LinkedPair( key , value )
 
-            self.storage[ index ] = LinkedPair( key , value )
-            return
+        else:
+            new_node = LinkedPair( key , value )
+            new_node.next = bucket
+            self.storage[ self._hash_mod( key ) ] = new_node
+
+        # for i in range( len( self.storage ) ):
+        #     if self.storage[i] is None:
+        #         None
+        #     else:
+        #         if self.storage[i].key == key:
+        #             print( 'SAME KEY' )
+        #             # i.value == value
+        #             self.storage[ i ] = LinkedPair( key , value )
+        #             return
+                    
+
+        # index = self._hash_mod( key )
+        # print( 'index from insert' , index )
+        # node = self.storage[ index ]
+
+        # # if storage is empty
+        # if node is None:
+
+        #     self.storage[ index ] = LinkedPair( key , value )
+        #     return
 
 
 
@@ -88,7 +101,14 @@ class HashTable:
         Fill this in.
         '''
 
-        pass
+        for i in range( len( self.storage ) ):
+
+            if self.storage[i] is not None:
+
+                if self.storage[i].key == key:
+                    print( 'REMOVE' , key )
+                    return self.storage[i] == None
+                    # self.remove( key )
 
 
     def retrieve(self, key):
@@ -99,19 +119,30 @@ class HashTable:
 
         Fill this in.
         '''
-        # os.system( 'clear' )
-        for i in self.storage:
-            if i is not None:
-                print( i.key , i.value )
 
+        bucket = self.storage[ self._hash_mod( key ) ]
 
-        print( 'Retrieve:' , key )
-        for i in self.storage:
-            if i is not None:
+        if bucket is None:
 
-                if i.key == key:
+            return None
 
-                    return i.value
+        else:
+
+            temp = bucket
+
+            # traverse through the linked list
+
+            while temp is not None:
+            
+                if temp.key == key:
+
+                    return temp.value
+
+                else:
+                    
+                    temp = temp.next
+
+            return None
 
 
     def resize(self):
@@ -121,6 +152,7 @@ class HashTable:
 
         Fill this in.
         '''
+        os.system( 'clear' )
         print( 'RESIZING!')
 
         current_len = len( self.storage )
@@ -129,6 +161,9 @@ class HashTable:
 
         for i in range( current_len ):
             self.storage.append( None )
+
+        print( 'NEW LEN ----' , len( self.storage ) )
+
 
 
 
