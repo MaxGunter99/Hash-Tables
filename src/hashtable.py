@@ -54,7 +54,7 @@ class HashTable:
                 if i == len( self.storage ) - 1:
                     print( 'STORAGE IS FULL' )
                     self.resize()
-                    return i
+                    return i + 1
 
 
     def insert(self, key, value):
