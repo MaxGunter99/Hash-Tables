@@ -1,3 +1,7 @@
+import os
+import sys
+import random
+os.system( 'clear' )
 # '''
 # Linked List hash table key/value pair
 # '''
@@ -6,6 +10,8 @@ class LinkedPair:
         self.key = key
         self.value = value
         self.next = None
+
+
 
 class HashTable:
     '''
@@ -17,6 +23,7 @@ class HashTable:
         self.storage = [None] * capacity
 
 
+
     def _hash(self, key):
         '''
         Hash an arbitrary key and return an integer.
@@ -24,6 +31,7 @@ class HashTable:
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
         return hash(key)
+
 
 
     def _hash_djb2(self, key):
@@ -35,12 +43,14 @@ class HashTable:
         pass
 
 
+
     def _hash_mod(self, key):
         '''
         Take an arbitrary key and return a valid integer index
         within the storage capacity of the hash table.
         '''
         return self._hash(key) % self.capacity
+                    
 
 
     def insert(self, key, value):
@@ -51,7 +61,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        print( 'INSERT - Key:' , key , 'Value:' , value )
+
+        bucket = self.storage[ self._hash_mod( key ) ]
+
+        if bucket is None:
+            self.storage[ self._hash_mod( key ) ] = LinkedPair( key , value )
+
+        else:
+
+            new_node = LinkedPair( key , value )
+            new_node.next = bucket
+            self.storage[ self._hash_mod( key ) ] = new_node
 
 
 
@@ -63,7 +84,17 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        print( 'REMOVE -----', key )
+
+        bucket = self._hash_mod( key )
+
+        if self.storage[ bucket ] == None:
+            print( '404' )
+            return
+
+        self.storage[ bucket ] = None
+
 
 
     def retrieve(self, key):
@@ -74,7 +105,30 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        bucket = self.storage[ self._hash_mod( key ) ]
+
+        if bucket is None:
+
+            return None
+
+        else:
+
+            temp = bucket
+
+            # traverse through the linked list
+
+            while temp is not None:
+            
+                if temp.key == key:
+
+                    return temp.value
+
+                else:
+
+                    temp = temp.next
+
+            return None
 
 
     def resize(self):
@@ -84,7 +138,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        print( 'RESIZING!')
+
+        current_len = len( self.storage )
+
+        for i in range( current_len ):
+            self.storage.append( None )
+
+        print( 'NEW LEN ----' , len( self.storage ) )
 
 
 
